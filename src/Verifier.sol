@@ -9,8 +9,14 @@ contract Verifier is Iverifier {
 
     //mapping
 mapping(address user => UserDetails)public userdetails;
-mapping(bytes32 accesscode => bool isApprove)public isApprove;
+
 mapping (address owners => bool isOwner)public isOwner;
+
+//events  
+event Register(address indexed user, string name, string email, bytes32 code, string userPassKey);
+event Cancel(address indexed user, string name, string email, bytes32 code, string userPassKey,bool isCancel);
+event Approve(address indexed user, string name, string email, bytes32 code, string userPassKey,bool isApprove);
+
 
 constructor(){
     isOwner[msg.sender] = true;
@@ -27,8 +33,11 @@ modifier onlyOwners(){
         
         userdetails[msg.sender] = UserDetails({userName: _userName,userPassKey:_userPassKey,accessCode:access_code,userEmail:_userEmail,isApprove:false});
 
+        emit Register({user:msg.sender, name:_userName, email:_userEmail, code:access_code, userPassKey:_userPassKey});
 
         return access_code;
+        
+
 
      }
      //should be only owner
@@ -36,23 +45,29 @@ modifier onlyOwners(){
         require(!userdetails[_userAddress].isApprove,"already approved");
         UserDetails storage details =  userdetails[_userAddress];
         details.isApprove = true;
+      emit Approve({user:_userAddress, name:details.userName, email:details.userEmail, code:details.accessCode, userPassKey:details.userPassKey, isApprove:details.isApprove});
+
+       
+
+    }
+   function cancel(address _userAddress)external onlyOwners {
+        require(userdetails[_userAddress].isApprove,"not approved");
+        UserDetails storage details =  userdetails[_userAddress];
+        details.isApprove = false;
+        emit Cancel({user:_userAddress, name:details.userName, email:details.userEmail, code:details.accessCode, userPassKey:details.userPassKey, isCancel:details.isApprove});
       
 
        
 
     }
-    function cancel(bytes32 _userKey) external onlyOwners{
-         require(isApprove[_userKey],"already not yet approved");
 
-        isApprove[_userKey] = false;
+  function access(address _userAddress)external view  returns(bool){
+        require(userdetails[_userAddress].isApprove,"not approved");
+        return true;  
 
-    } 
+       
 
-    function access(bytes32 _userKey)external view returns (bool){
-         require(isApprove[_userKey],"need approval");
-
-        return true;
-    } 
+    }
 
     function addOtherOwners(address _otherOwner)public  onlyOwners{
         require(!isOwner[_otherOwner], "already added");

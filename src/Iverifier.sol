@@ -11,9 +11,9 @@ interface  Iverifier {
     }
 
     function register(string memory _userName,string memory _userPassKey, string memory _userEmail)external returns(bytes32);
-    function approve(bytes32 _userKey)external ;
-    function cancel(bytes32 _userKey) external ;
+    function approve(address _user)external ;
+    function cancel(address _user) external ;
 
-    function access(bytes32 _userKey)external returns(bool) ;
+    function access(address _user)external returns(bool) ;
     
 }
