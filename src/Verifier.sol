@@ -11,6 +11,7 @@ contract Verifier is Iverifier {
 mapping(bytes32 accessCode => UserDetails)public userdetails;
 mapping(bytes32 accesscode => bool isApprove)public isApprove;
 mapping (address owners => bool isOwner)public isOwner;
+
 constructor(){
     isOwner[msg.sender] = true;
 }
@@ -20,17 +21,18 @@ modifier onlyOwners(){
     _;
 }
 
-     function register(string memory _userName,string memory _userPassKey)external returns(bytes32){
+     function register(string memory _userName,string memory _userPassKey,string memory _userEmail)external returns(bytes32){
         bytes32 access_code = msg.sender.generateCode(_userName,_userPassKey);
+       
         
-        userdetails[access_code] = UserDetails({userName: _userName,userPassKey:_userPassKey,accessCode:access_code});
+        userdetails[access_code] = UserDetails({userName: _userName,userPassKey:_userPassKey,accessCode:access_code,userEmail:_userEmail,isApprove:false});
 
 
         return access_code;
 
      }
      //should be only owner
-    function approve(bytes32 _userKey)external onlyOwners {
+    function approve(address _userAddress)external onlyOwners {
         require(!isApprove[_userKey],"already approved");
 
         isApprove[_userKey] = true;
