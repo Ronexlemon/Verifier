@@ -1,0 +1,37 @@
+type Approve @entity(immutable: true) {
+  id: Bytes!
+  user: Bytes! # address
+  name: String! # string
+  email: String! # string
+  code: Bytes! # bytes32
+  userPassKey: String! # string
+  isApprove: Boolean! # bool
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Cancel @entity(immutable: true) {
+  id: Bytes!
+  user: Bytes! # address
+  name: String! # string
+  email: String! # string
+  code: Bytes! # bytes32
+  userPassKey: String! # string
+  isCancel: Boolean! # bool
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Register @entity(immutable: true) {
+  id: Bytes!
+  user: Bytes! # address
+  name: String! # string
+  email: String! # string
+  code: Bytes! # bytes32
+  userPassKey: String! # string
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}

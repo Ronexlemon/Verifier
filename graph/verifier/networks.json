@@ -1,0 +1,8 @@
+{
+  "base-sepolia": {
+    "Verifier": {
+      "address": "0xeB20A2F8245CD46179bb56a99D1d08D195456b14",
+      "startBlock": 16786327
+    }
+  }
+}

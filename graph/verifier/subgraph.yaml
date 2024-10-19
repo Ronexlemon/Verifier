@@ -1,0 +1,32 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Verifier
+    network: base-sepolia
+    source:
+      address: "0xeB20A2F8245CD46179bb56a99D1d08D195456b14"
+      abi: Verifier
+      startBlock: 16786327
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Approve
+        - Cancel
+        - Register
+      abis:
+        - name: Verifier
+          file: ./abis/Verifier.json
+      eventHandlers:
+        - event: Approve(indexed address,string,string,bytes32,string,bool)
+          handler: handleApprove
+        - event: Cancel(indexed address,string,string,bytes32,string,bool)
+          handler: handleCancel
+        - event: Register(indexed address,string,string,bytes32,string)
+          handler: handleRegister
+      file: ./src/verifier.ts
