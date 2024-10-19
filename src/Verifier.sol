@@ -8,7 +8,7 @@ contract Verifier is Iverifier {
     using LiVerifier for address;
 
     //mapping
-mapping(bytes32 accessCode => UserDetails)public userdetails;
+mapping(address user => UserDetails)public userdetails;
 mapping(bytes32 accesscode => bool isApprove)public isApprove;
 mapping (address owners => bool isOwner)public isOwner;
 
@@ -25,7 +25,7 @@ modifier onlyOwners(){
         bytes32 access_code = msg.sender.generateCode(_userName,_userPassKey);
        
         
-        userdetails[access_code] = UserDetails({userName: _userName,userPassKey:_userPassKey,accessCode:access_code,userEmail:_userEmail,isApprove:false});
+        userdetails[msg.sender] = UserDetails({userName: _userName,userPassKey:_userPassKey,accessCode:access_code,userEmail:_userEmail,isApprove:false});
 
 
         return access_code;
@@ -33,9 +33,12 @@ modifier onlyOwners(){
      }
      //should be only owner
     function approve(address _userAddress)external onlyOwners {
-        require(!isApprove[_userKey],"already approved");
+        require(!userdetails[_userAddress].isApprove,"already approved");
+        UserDetails storage details =  userdetails[_userAddress];
+        details.isApprove = true;
+      
 
-        isApprove[_userKey] = true;
+       
 
     }
     function cancel(bytes32 _userKey) external onlyOwners{
